@@ -6,6 +6,7 @@
 
 local StateManager = require( "include.StateManager" )
 local GameState = require( "include.GameState" )
+local Camera = require( "include.Camera" )
 
 function love.load()
 	print("Polygonology Loading...")
@@ -25,6 +26,7 @@ end
 function love.draw()
 	StateManager:draw()
 end
+
 
 function love.resize( w, h )
 	StateManager:resize(w,h)

@@ -1,17 +1,14 @@
 local StateManager = require ("include.StateManager")
+local Highscores = require ("include.Highscores")
 
 local Scores = {
 	self = nil,
 	Image = nil,
 	ClickNoise = nil,
-	enabled = false
+	enabled = false,
+	Font = {},
+	Data = {}
 }
-
---local Input = require("include.Input")
---local Audio = require("include.Audio")
---local Level = require("include.Level")
---local Player = require("include.Player")
---local Entity = require("include.Entity")
 
 local cx = love.graphics.getWidth() / 2
 local cy = love.graphics.getHeight() / 2
@@ -37,8 +34,13 @@ function Scores:load()
 	print("Polygonology Scores Loading...")
 	self.Image = love.graphics.newImage( "assets/scores.png" )
 	ox = self.Image:getWidth()/2
-	oy = self.Image:getHeight()/2
+	oy = self.Image:getHeight()/2	
 
+	self.Font = love.graphics.newFont( "assets/Hack.ttf", 26 )
+	self.Data = Highscores:load()
+	if not self.Data then
+		self.Data = "No Highscores Available"
+	end
 end
 
 function Scores:unload()
@@ -57,11 +59,13 @@ end
 
 
 function Scores:draw()
-	--love.graphics.print('Polygonology', 400, 300)
 	love.graphics.setColor( 0, 255, 0, 255 )
 	love.graphics.draw( self.Image, cx - ox, 50, 0, 1, 1, 0, 0, 0, 0 )
-
-
+	
+	--TODO for each line in data, parse name and score, and sort them
+	love.graphics.setColor( 0, 200, 100, 255 )
+	love.graphics.setFont(self.Font);
+	love.graphics.print(self.Data, love.graphics.getWidth()/4, love.graphics.getHeight()/4);
 end
 
 
@@ -75,6 +79,10 @@ end
 function Scores:keypressed( key, scancode, isrepeat )
 	print("Scores:keypressed() ---> " .. key )
 	
+	
+	if key == "return" then
+		StateManager:SwitchTo("Credits") 
+	end
 
 	if key == "escape" then
 		StateManager:SwitchTo("Titlescreen")

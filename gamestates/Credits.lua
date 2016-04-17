@@ -8,11 +8,7 @@ local Credits = {
 	enabled = false
 }
 
---local Input = require("include.Input")
---local Audio = require("include.Audio")
---local Level = require("include.Level")
---local Player = require("include.Player")
---local Entity = require("include.Entity")
+local Highscores = require( "include.Highscores" )
 
 local cx = love.graphics.getWidth() / 2
 local cy = love.graphics.getHeight() / 2
@@ -92,7 +88,7 @@ function Credits:keypressed( key, scancode, isrepeat )
 		--Throw State Change to Credits
 		--love.quit()
 	end
-	
+
 	love.event.quit()
 
 end
