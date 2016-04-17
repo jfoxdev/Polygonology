@@ -15,6 +15,7 @@ Controls
 * left shift	- Boost   (todo)
 * esc			- Quit
 * return		- Select Menu Item
-
+* f11			- Toggle Fullscreen
+* f12			- Grab Screenshot
 
 
