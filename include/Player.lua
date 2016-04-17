@@ -31,6 +31,8 @@ local Player = {
 	
 }
 
+local Camera = require ("include.Camera")
+
 function Player:new()	
 	if o == nil then 
 		o = {}
@@ -45,8 +47,8 @@ function Player:new()
 end
 
 function Player:load()
-	self.position.x = love.graphics.getWidth() / 2
-	self.position.y = love.graphics.getHeight() / 2
+	--self.position.x = love.graphics.getWidth() / 2
+	--self.position.y = love.graphics.getHeight() / 2
 
 	self.Polygon.segments = 3
 	for i=1,self.Polygon.segments*2 do
@@ -91,9 +93,8 @@ end
 
 function Player:draw()
 	--love.graphics.translate(0,0)
-	love.graphics.translate(self.position.x, self.position.y)
+	--love.graphics.translate(self.position.x, self.position.y)
 	--love.graphics.translate(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
-
 	--love.graphics.rotate(self.rotation) -- this is in radians
 	--love.graphics.scale(1 * self.mass, 1 * self.mass)
 
@@ -104,24 +105,15 @@ function Player:draw()
 		self.ActiveColor.a * 100
 	)
 	love.graphics.setLineStyle( "smooth" )
-	--love.graphics.line( self.position.x, self.position.y, self.position.x2, self.position.y2 )
-	--love.graphics.polygon( "fill", self.Points )
-	
 	love.graphics.polygon( "fill", self.Polygon.points )
-	
 	love.graphics.setColor(
 		200,
 		200,
 		200,
 		128
 	)
-
 	love.graphics.polygon( "line", self.Polygon.points )
 
-	for i=1,#self.Polygon do
-		--love.graphics.line( self.position.x, self.position.y, self.position.x2, self.position.y2 )
-		--drawline  Polygon[i]
-	end
 end
 
 
@@ -151,6 +143,7 @@ end
 function Player:Boost()
 	print("Boost!")
 	self.mass = self.mass + 1
+	self.score = self.score + 1
 end
 
 function Player:Deflect()
@@ -158,6 +151,7 @@ function Player:Deflect()
 	Player:AddPoint()
 
 end
+
 
 function Player:AddPoint(x,y)
 	local size = self.Polygon.size
@@ -175,6 +169,14 @@ function Player:AddPoint(x,y)
 		table.insert(self.Polygon.points, pos, y)
 	end
 
+	
+	self.score = self.score + 100
+	if self.score > 2500 then 
+		self.score = self.score - 2500
+		self.level = self.level + 1
+	end
+	self.Polygon.segments = self.Polygon.segments + 1
+	self.mass = self.mass + 0.1
 	self.Polygon.size = self.Polygon.size + 0.1
 end
 

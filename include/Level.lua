@@ -1,4 +1,6 @@
 require ( "include.Common" )
+local Camera = require ( "include.Camera" )
+local Polymitter = require ( "include.Polymitter" )
 local Polygonoid = require ( "include.Polygonoid" )
 
 local Level = {
@@ -19,7 +21,7 @@ local Level = {
 	Deflectors = {},
 }
 
-local timer = 2.0
+local Timer = 2.0
 
 function Level:new(o)
 	if o == nil then 
@@ -40,17 +42,17 @@ function Level:load(p)
     self.World:setCallbacks(beginContact, endContact, preSolve, postSolve)
 	love.physics.setMeter(32) -- set 32 pixels/meter
 	
-	--[[
 	self.Polymitters[1] = Polymitter:new()
-	self.Polymitters[1]:load(0,0)
+	self.Polymitters[1]:load(25,25)
 	self.Polymitters[2] = Polymitter:new()
-	self.Polymitters[2]:load(0,love.graphics.getHeight())
+	self.Polymitters[2]:load(25,love.graphics.getHeight() - 25)
 	self.Polymitters[3] = Polymitter:new()
-	self.Polymitters[3]:load(love.graphics.getWidth(),love.graphics.getHeight())
+	self.Polymitters[3]:load(love.graphics.getWidth() - 25,love.graphics.getHeight() - 25)
 	self.Polymitters[4] = Polymitter:new()
-	self.Polymitters[4]:load(love.graphics.getWidth(),0)
-	]]
+	self.Polymitters[4]:load(love.graphics.getWidth() - 25,25)
 
+
+--[[
 	for i=1,20 do
 		self.Entities[i] = Polygonoid:new()
 		--self.Entities[i].position.x = math.random(-love.graphics.getWidth(),love.graphics.getWidth())
@@ -61,24 +63,56 @@ function Level:load(p)
 		self.Entities[i].velocity.y = math.random(-5,5)
 		self.Entities[i]:load(self.World)
 	end
-
+]]
 end
 
 function Level:update(dt)
+
+	Timer = Timer - dt
+
 	--self.World:update(dt)
 	for k,v in pairs(self.Entities) do
 		self.Entities[k]:update(dt)
 	end
-
 	
+	for k,v in pairs(self.Polymitters) do
+		self.Polymitters[k]:update(dt)
+		--table.insert(self.Entities, #self.Entities, self.Polymitters[k]:Spawn(3,100,100))
+	end
+
+	if Timer < 0 then
+		Timer = math.random(0,100) * 0.01
+		local k = math.random(1,4)
+		
+		table.insert(self.Entities, #self.Entities, self.Polymitters[k]:Spawn(6,10,10) )
+		--self.Entities[#self.Entities] = self.Polymitters[k]:Spawn(3,10,10)
+		self.Entities[#self.Entities]:load()
+	end
+
+
+
 end
 
 function Level:draw()
 	for i=1,#self.Entities do
 		self.Entities[i]:draw()
 	end
-
+	
+	for i=1,#self.Polymitters do
+		self.Polymitters[i]:draw()
+	end
 end
 
+function Level:resize( w, h )
+
+	self.Polymitters[1] = Polymitter:new()
+	self.Polymitters[1]:load(25,25)
+	self.Polymitters[2] = Polymitter:new()
+	self.Polymitters[2]:load(25,love.graphics.getHeight() - 25)
+	self.Polymitters[3] = Polymitter:new()
+	self.Polymitters[3]:load(love.graphics.getWidth() - 25,love.graphics.getHeight() - 25)
+	self.Polymitters[4] = Polymitter:new()
+	self.Polymitters[4]:load(love.graphics.getWidth() - 25,25)
+end
 
 return Level

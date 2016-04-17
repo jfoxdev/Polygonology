@@ -9,9 +9,13 @@ function StateManager:load(name, enabled)
 	--Current:load()
 	self.States[name] = require("gamestates."..name)
 	self.States[name]:load()
+	
 	if enabled ~= nil then
 		self.States[name].enabled = enabled
+	else
+		self.States[name].enabled = false
 	end
+
 end
 
 
