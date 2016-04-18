@@ -49,7 +49,7 @@ function Titlescreen:load()
 	Menu:add(3, "Quit", "assets/quit.png", QuitButton)
 	Menu:print()
 	
-	--love.audio.play(self.Music)
+	love.audio.play(self.Music)
 end
 
 function Titlescreen:unload()
@@ -91,7 +91,7 @@ end
 
 function Titlescreen:mousepressed(x,y,button,istouch)
 	print("Titlescreen:mousepressed() ---> " .. x .. ","..y..","..button.."\n")
-	love.audio.play(self.ClickNoise)
+	--love.audio.play(self.ClickNoise)
 end
 function Titlescreen:mousereleased(x,y,button,istouch)
 	print("Titlescreen:mousereleased() ---> " .. x .. ","..y..","..button.."\n")
@@ -100,7 +100,7 @@ end
 function Titlescreen:keypressed( key, scancode, isrepeat )
 	print("Titlescreen:keypressed() ---> " .. key )
 
-	if key == "escape" then
+	if self.enabled and key == "escape" then
 		--Throw State Change to Credits
 		QuitButton()
 	end

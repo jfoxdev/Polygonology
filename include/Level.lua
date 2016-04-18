@@ -23,6 +23,7 @@ local Level = {
 
 local Timer = 2.0
 
+
 function Level:new(o)
 	if o == nil then 
 		o = {}
@@ -37,10 +38,8 @@ function Level:new(o)
 end
 
 
-function Level:load(p)
-	self.World = love.physics.newWorld( 0, 0, true)
-    self.World:setCallbacks(beginContact, endContact, preSolve, postSolve)
-	love.physics.setMeter(32) -- set 32 pixels/meter
+function Level:load(world)
+	self.World = world
 	
 	self.Polymitters[1] = Polymitter:new()
 	self.Polymitters[1]:load(25,25)
@@ -84,9 +83,8 @@ function Level:update(dt)
 		Timer = math.random(0,100) * 0.01
 		local k = math.random(1,4)
 		
-		table.insert(self.Entities, #self.Entities, self.Polymitters[k]:Spawn(6,10,10) )
-		--self.Entities[#self.Entities] = self.Polymitters[k]:Spawn(3,10,10)
-		self.Entities[#self.Entities]:load()
+		--table.insert(self.Entities, #self.Entities, self.Polymitters[k]:Spawn(6,10,10) )
+		--self.Entities[#self.Entities]:load(self.World)
 	end
 
 

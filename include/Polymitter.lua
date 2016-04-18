@@ -5,7 +5,7 @@ local Polymitter = {
 	name = "Polymitter",
 	position = { x = 0, y = 0 },
 	velocity = { x = 0, y = 0 },
-	
+	World = {},
 	PS = {},		--Particle System
 	Texture = {},	--Particle Texture
 	ActiveColor = {r=0.0,g=0.5,b=1.0,a=1.0},	-- Active Color
@@ -39,6 +39,8 @@ end
 
 function Polymitter:load(x,y,world)
 
+	self.World = world
+
 	if x == nil then x = math.random(0,10) end
 	if y == nil then y = math.random(0,10) end
 	self.position.x = x
@@ -47,7 +49,7 @@ function Polymitter:load(x,y,world)
 	
 	self.Texture = love.graphics.newImage("assets/particle.png")
 	
-	self.PS = love.graphics.newParticleSystem(self.Texture, 20 )
+	self.PS = love.graphics.newParticleSystem(self.Texture, 50 )
 	self.PS:setEmitterLifetime(-1)
 	self.PS:setLinearAcceleration(5,5)
 	self.PS:setSpin( 0, 2*math.pi )
@@ -60,7 +62,7 @@ function Polymitter:load(x,y,world)
 		self.ActiveColor.a * 255
 	)
 	self.PS:setSizes(0.25,0.5,0.75,2, 5)
-	self.PS:setEmissionRate(1)
+	self.PS:setEmissionRate(2)
 
 	self.PS:start()
 

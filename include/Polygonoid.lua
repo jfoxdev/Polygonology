@@ -3,18 +3,16 @@ require( "include.Common" )
 local Polygonoid = {
 	id = "",
 	name = "Polygonoid",
-	score = 0,
-	level = 1,
-
 	position = { 
-		x = 0, y = 0,
-		x2 = 0, y2 = 0 
+		x = 0, y = 0
 	},
 	velocity = { x = 0, y = 0 },
 	dimensions = { w = 1, h = 1 },
 	mass = 1.0,
 	rotation = 0,
-	Body = {},
+	Body = nil,
+	Shape = nil,
+	Fixture = nil,
 	ActiveColor = {r=0.5,g=0.5,b=1.0,a=0.7},
 	Colors = {
 		Idle = {r=0.5,g=0.5,b=1.0,a=0.7},
@@ -27,7 +25,9 @@ local Polygonoid = {
 		density = 1.0,
 		angle = 180,
 		points = { }
-	}
+	},
+	Duration = 5,
+	damage = false
 }
 
 function Polygonoid:new(o)
@@ -41,6 +41,9 @@ function Polygonoid:new(o)
 		o.Colors = DeepCopy(o.Colors)
 		o.Colors.Good = DeepCopy(o.Colors.Good)
 		o.Colors.Bad = DeepCopy(o.Colors.Bad)
+		o.Body = DeepCopy(o.Body)
+		o.Shape = DeepCopy(o.Shape)
+		o.Fixture = DeepCopy(o.Fixture)
 		o.Polygon = DeepCopy(o.Polygon)
 		o.Polygon.points = DeepCopy(o.Polygon.points)
 	end
@@ -56,7 +59,7 @@ function Polygonoid:load(world)
 	self.position.x = math.random(0,love.graphics.getWidth())
 	self.position.y = math.random(0,love.graphics.getHeight())
 	
-	self.Polygon.segments = math.random(3,6)
+	self.Polygon.segments = math.random(3,4)
 	for i=1,self.Polygon.segments*2 do
 
 		if i%2 == 0 then
@@ -68,6 +71,14 @@ function Polygonoid:load(world)
 
 	self.mass = math.random(0,30) * 0.1
 
+	self.Body = love.physics.newBody( world, self.position.x, self.position.y, "dynamic" )
+	self.Body:setMass(2)
+	--self.Shape = love.physics.newCircleShape( self.Polygon.size )
+	self.Shape = love.physics.newCircleShape( 50 )
+	self.Fixture = love.physics.newFixture(self.Body, self.Shape)
+	self.Fixture:setRestitution(1)
+	self.Fixture:setUserData({type="Polygonoid",value=self.name})
+
 	print("Loaded Polygonoid: x="..self.position.x..",y="..self.position.y)
 end
 
@@ -75,13 +86,10 @@ end
 
 function Polygonoid:update(dt)
 	-- if score, change color and fade back to default
-
+	self.Duration = self.Duration - dt
 	self.position.x = self.position.x + ( self.velocity.x * dt )
 	self.position.y = self.position.y + ( self.velocity.y * dt )
-	self.position.x2 = self.position.x + (math.cos(self.rotation/360 * math.pi) + 10)
-	self.position.y2 = self.position.y + (math.sin(self.rotation/360 * math.pi) + 10)
 	
-
 	for i=1,#self.Polygon.points do 
 		if i%2 == 0 then
 			self.Polygon.points[i] = self.Polygon.points[i] + ( self.velocity.y * dt )
@@ -89,18 +97,16 @@ function Polygonoid:update(dt)
 			self.Polygon.points[i] = self.Polygon.points[i] + ( self.velocity.x * dt )
 		end
 	end
---[[
-	self.Points[1] = self.position.x
-	self.Points[2] = self.position.y
-	self.Points[3] = self.position.x
-	self.Points[4] = self.position.y + (10 + self.mass)
-	self.Points[5] = self.position.x + (10 + self.mass)
-	self.Points[6] = self.position.y
-	]]
+	
+	--self.Shape:setRadius( self.Polygon.size )
+	self.Shape:setRadius( 50 )
+	self.Body:setPosition( self.position.x, self.position.y)
+
 end
 
 function Polygonoid:draw()
 	
+	--[[
 	love.graphics.setColor(
 		self.ActiveColor.r * 255,
 		self.ActiveColor.g * 255,
@@ -109,6 +115,15 @@ function Polygonoid:draw()
 	)
 	love.graphics.setLineStyle( "smooth" )
 	love.graphics.polygon( "fill", self.Polygon.points )
+
+	]]
+	love.graphics.setColor(
+		self.ActiveColor.r * 255,
+		self.ActiveColor.g * 255,
+		self.ActiveColor.b * 255,
+		self.ActiveColor.a * 200
+	)
+    love.graphics.circle("line", self.Body:getX(), self.Body:getY(), 50, 64)
 	love.graphics.setColor(
 		200,
 		200,
@@ -116,6 +131,7 @@ function Polygonoid:draw()
 		128
 	)
 	love.graphics.polygon( "line", self.Polygon.points )
+
 end
 
 
