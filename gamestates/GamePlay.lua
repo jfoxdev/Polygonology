@@ -290,10 +290,10 @@ function preSolve(a, b, coll)
 		  	GamePlay.Player:RemovePoint()
 		  	GamePlay.Player.score = GamePlay.Player.score - 10
 			if GamePlay.Player.score < 0 then GamePlay.Player.score = 0 end
-			love.audio.play(SmashNoise)
+			--love.audio.play(SmashNoise)
 		else
 		  	GamePlay.Player:AddPoint()
-			love.audio.play(SmashNoise)
+			--love.audio.play(SmashNoise)
 		end
 	end
 

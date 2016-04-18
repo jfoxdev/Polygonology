@@ -40,8 +40,8 @@ function Titlescreen:load()
 	ox = self.Image:getWidth()/2
 	oy = self.Image:getHeight()/2
 	
-	self.Music = love.audio.newSource("assets/menu.ogg", "stream")
-	self.ClickNoise = love.audio.newSource("assets/smash.ogg", "static")
+	--self.Music = love.audio.newSource("assets/menu.ogg", "stream")
+	--self.ClickNoise = love.audio.newSource("assets/smash.ogg", "static")
 
 
 	Menu:add(1, "Play", "assets/play.png", PlayButton)
@@ -49,7 +49,7 @@ function Titlescreen:load()
 	Menu:add(3, "Quit", "assets/quit.png", QuitButton)
 	Menu:print()
 	
-	love.audio.play(self.Music)
+	--love.audio.play(self.Music)
 end
 
 function Titlescreen:unload()
